@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="12"/>
+    <BuildModes Active="Default"/>
+    <Units>
+      <Unit>
+        <Filename Value="System2Monitor.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="356"/>
+        <CursorPos Y="377"/>
+        <FoldState Value=" T3U042 pk1kB0*/"/>
+        <UsageCount Value="31"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\gabriel.rodrigues\AppData\Local\lazarus\onlinepackagemanager\packages\zeosdbo\src\dbc\ZDbcIntfs.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="5157"/>
+        <CursorPos X="5" Y="5195"/>
+        <UsageCount Value="9"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\components\ideintf\propedits.pp"/>
+        <UnitName Value="PropEdits"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="17"/>
+        <CursorPos X="14" Y="36"/>
+        <UsageCount Value="9"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\components\synedit\synedithighlighterfoldbase.pas"/>
+        <UnitName Value="SynEditHighlighterFoldBase"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="41"/>
+        <CursorPos X="31" Y="60"/>
+        <UsageCount Value="9"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\Pictures\DJConversor\uimportarprodutos.pas"/>
+        <UnitName Value="uImportarProdutos"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="295"/>
+        <CursorPos X="35" Y="295"/>
+        <UsageCount Value="14"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\Pictures\DJConversor\uimportadorbase.pas"/>
+        <UnitName Value="uImportadorBase"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="14"/>
+        <Loaded Value="True"/>
+      </Unit>
+    </Units>
+    <JumpHistory HistoryIndex="29">
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="276" Column="21" TopLine="268"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="324" Column="23" TopLine="307"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="274" Column="48" TopLine="268"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="290" Column="10" TopLine="280"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="345" Column="68" TopLine="331"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="373" TopLine="352"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="388" TopLine="367"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="349" Column="139" TopLine="332"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="259" Column="40" TopLine="248"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="365" Column="42" TopLine="364"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="286" Column="39" TopLine="278"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="365" Column="57" TopLine="355"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="368" TopLine="347"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="271" Column="68" TopLine="262"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="331" Column="38" TopLine="324"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="346" Column="42" TopLine="338"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="361" Column="126" TopLine="358"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="369" Column="58" TopLine="358"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="378" TopLine="357"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="309" Column="19" TopLine="299"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="257" Column="52" TopLine="242"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="24" Column="29" TopLine="13"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="262" Column="36" TopLine="254"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="288" Column="55" TopLine="278"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="338" TopLine="317"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="375" TopLine="357"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="256" Column="77" TopLine="243"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="405" Column="39" TopLine="376"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="424" Column="29" TopLine="412"/>
+      </Position>
+      <Position>
+        <Filename Value="System2Monitor.lpr"/>
+        <Caret Line="24" Column="10" TopLine="8"/>
+      </Position>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode=""/>
+    </RunParams>
+    <HistoryLists>
+      <List Name="LaunchingApplication" Type="File" Count="1">
+        <Item1 Value="C:\Windows\system32\cmd.exe /C ${TargetCmdLine}"/>
+      </List>
+    </HistoryLists>
+  </ProjectSession>
+</CONFIG>
