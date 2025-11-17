@@ -7,6 +7,7 @@ Projetado especialmente para migrar lojas com segurança, reaproveitando cadastr
 ---
 
 ## 🚀 **Principais Recursos**
+<img width="979" height="511" alt="image" src="https://github.com/user-attachments/assets/5d7eea25-bef8-4d61-81d3-b0e149dfa065" />
 
 O conversor executa automaticamente a importação da maioria dos módulos necessários para continuar o trabalho via DJMonitor:
 
