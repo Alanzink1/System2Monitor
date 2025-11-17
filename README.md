@@ -127,7 +127,7 @@ Importa faturas, parcelas e vínculos com clientes.
 
 ## ▶️ **Como Usar**
 
-1. Baixe a pasta do repositório e compile via Lazarus, devendo conter a pasta assets com o dentro banco_zerado.fdb, no mesmo diretório:
+1. Baixe o arquivo compactado do repositório, descompacte e compile via Lazarus (ou executando o .exe), devendo conter a pasta assets com o dentro banco_zerado.fdb, no mesmo diretório:
    ```
    /assets
        /banco_zerado.fdb
