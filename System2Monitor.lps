@@ -9,10 +9,10 @@
         <Filename Value="System2Monitor.lpr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="2223"/>
-        <CursorPos X="23" Y="2232"/>
-        <FoldState Value=" T3V03012 pk1kG0*1]94lZ0{[A4jbnK0{&apos;3]K8o40C5]JHjf0Q[c4alN0s2]INke0{X[l4Cm10x12]Ln8oW0&apos;1 Pj0ic0&apos;"/>
-        <UsageCount Value="129"/>
+        <TopLine Value="2667"/>
+        <CursorPos X="49" Y="2681"/>
+        <FoldState Value=" T3V03012 pk1kG0*1]93lY0{*01[C4VrA0n]Uj2kE0C5]9Hjf0Q[R4alN0s[R4Nke0{a1]ACm40x12]Ln8oW0&apos;[B4Pn8s60H"/>
+        <UsageCount Value="159"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -21,135 +21,135 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="295"/>
         <CursorPos X="35" Y="295"/>
-        <UsageCount Value="33"/>
+        <UsageCount Value="31"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\Pictures\DJConversor\uimportadorbase.pas"/>
         <UnitName Value="uImportadorBase"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="33"/>
+        <UsageCount Value="31"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="1728" Column="61" TopLine="1723"/>
+        <Caret Line="2231" Column="76" TopLine="2213"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="1744" Column="19" TopLine="1726"/>
+        <Caret Line="2186" Column="36" TopLine="2182"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="1783" Column="49" TopLine="1767"/>
+        <Caret Line="2225" Column="61" TopLine="2213"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="1788" Column="41" TopLine="1772"/>
+        <Caret Line="2224" Column="22" TopLine="2214"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="1811" Column="19" TopLine="1801"/>
+        <Caret Line="2227" Column="21" TopLine="2217"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="1854" Column="38" TopLine="1837"/>
+        <Caret Line="2358" Column="42" TopLine="2348"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="1867" Column="27" TopLine="1855"/>
+        <Caret Line="2231" Column="20" TopLine="2220"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="1907" Column="58" TopLine="1890"/>
+        <Caret Line="2187" Column="21" TopLine="2184"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="1912" Column="44" TopLine="1900"/>
+        <Caret Line="2399" TopLine="2378"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="1998" Column="37" TopLine="1988"/>
+        <Caret Line="823" Column="45" TopLine="177"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2147" Column="58" TopLine="2135"/>
+        <Caret Line="2510" Column="51" TopLine="2493"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2043" Column="59" TopLine="2033"/>
+        <Caret Line="2508" Column="57" TopLine="2492"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="553" Column="38" TopLine="537"/>
+        <Caret Line="2564" Column="59" TopLine="2547"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2160" TopLine="2139"/>
+        <Caret Line="2588" Column="12" TopLine="2580"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2142" TopLine="2121"/>
+        <Caret Line="2707" Column="33" TopLine="2692"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2136" Column="18" TopLine="2119"/>
+        <Caret Line="2494" Column="49" TopLine="1849"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2132" Column="30" TopLine="2131"/>
+        <Caret Line="2560" TopLine="2548"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2140" TopLine="2119"/>
+        <Caret Line="2579" Column="55" TopLine="2567"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2125" Column="20" TopLine="2117"/>
+        <Caret Line="2538" Column="28" TopLine="2521"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2113" Column="33" TopLine="2103"/>
+        <Caret Line="2490" Column="41" TopLine="1879"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2137" TopLine="1878"/>
+        <Caret Line="2497" Column="67" TopLine="2090"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2161" Column="5" TopLine="2142"/>
+        <Caret Line="2718" Column="43" TopLine="2705"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2160" Column="5" TopLine="2141"/>
+        <Caret Line="2264" Column="27" TopLine="2243"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2217" Column="34" TopLine="2201"/>
+        <Caret Line="2375" Column="45" TopLine="2354"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2159" Column="5" TopLine="2140"/>
+        <Caret Line="2465" Column="60" TopLine="2454"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2130" Column="44" TopLine="2117"/>
+        <Caret Line="2694" Column="65" TopLine="2676"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2131" Column="38" TopLine="2118"/>
+        <Caret Line="2698" Column="18" TopLine="2676"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2164" TopLine="2143"/>
+        <Caret Line="2711" Column="90" TopLine="2692"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2136" Column="32" TopLine="2124"/>
+        <Caret Line="552" Column="57" TopLine="383"/>
       </Position>
       <Position>
         <Filename Value="System2Monitor.lpr"/>
-        <Caret Line="2186" TopLine="2165"/>
+        <Caret Line="611" Column="77" TopLine="589"/>
       </Position>
     </JumpHistory>
     <RunParams>

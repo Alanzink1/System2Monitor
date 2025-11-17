@@ -292,7 +292,6 @@ begin
     codWallet := StrToIntDef(codWalletStr, -1);
     if codWallet <= 0 then
     begin
-      writeln('Carteira ignorada (CODCAR inválido): ', codWalletStr);
       dbfFile.Next;
       Continue;
     end;
@@ -1538,15 +1537,18 @@ begin
           'CODEXTERNO) '+
           'VALUES ('+
           '1, :COD, :INI, :FIM, :OBS, :CLI, :DOC, :NOMECLI, '+
-          ':SUBT, :DESCACR, 1, ''N'', '+
-          '''N'', 1, 1, 1, 0, NULL, '+
-          '0, 0, ''N'', ''VD'', '+
+          ':SUBT, :DESCACR, ''AV'', ''N'', '+
+          '''N'', NULL, NULL, NULL, NULL, NULL, '+
+          'NULL, NULL, ''N'', ''VD'', '+
           'NULL)';
 
         query.ParamByName('COD').AsInteger := codPrev;
 
         query.ParamByName('INI').AsDateTime := dtEmis;
         query.ParamByName('FIM').AsDateTime := dtEmis;
+
+        if codCli = 0 then
+           nomeCli := 'VENDAS AO CONSUMIDOR';
 
         query.ParamByName('OBS').AsString     := Copy(obs, 1, 200);
         query.ParamByName('CLI').AsInteger    := codCli;
@@ -2173,6 +2175,484 @@ begin
   end;
 end;
 
+procedure ImportEntradas(conn: TIBConnection;
+  trans: TSQLTransaction; query: TSQLQuery; systemPath: String);
+var
+  dbfEnt: TDbf;
+  codLoja, codTer, codTur: Integer;
+  coo: Integer;
+  dtEmis, dtEnt: TDateTime;
+  codTipoDoc, codComprador, numero, serie: Integer;
+  chaveNFe, serieStr: String;
+  total, frete, desconto: Double;
+begin
+  codLoja := 1;
+  codTer  := 1;
+  codTur  := 1;
+
+  query.Close;
+  query.SQL.Text :=
+    'SELECT 1 FROM PLANOPAGTO WHERE CODPLANOPAGTO = ''1''';
+  query.Open;
+  if query.IsEmpty then
+  begin
+    query.Close;
+    query.SQL.Text :=
+      'INSERT INTO PLANOPAGTO (CODPLANOPAGTO, DESCRICAO, PARCELAS) ' +
+      'VALUES (''1'', ''EN'', 1)';
+    query.ExecSQL;
+  end;
+
+  dbfEnt := TDbf.Create(nil);
+  try
+    dbfEnt.FilePathFull := ExtractFilePath(systemPath + '/entrada.dbf');
+    dbfEnt.TableName    := 'entrada.dbf';
+    dbfEnt.Open;
+
+    dbfEnt.First;
+    while not dbfEnt.EOF do
+    begin
+      coo        := StrToIntDef(Trim(dbfEnt.FieldByName('MOVIMENTO').AsString), 0);
+      if coo = 0 then
+      begin
+        dbfEnt.Next;
+        Continue;
+      end;
+
+      numero     := dbfEnt.FieldByName('NFE_NOTA').AsInteger;
+      if IsNan(numero) then
+        numero   := dbfEnt.FieldByName('NUMDOCTO').AsInteger;
+
+      serieStr := Trim(dbfEnt.FieldByName('SERIE_NOTA').AsString);
+      if serieStr <> '' then
+        serie := dbfEnt.FieldByName('SERIE_NOTA').AsInteger
+      else
+        serie := 0;
+
+      chaveNFe   := Trim(dbfEnt.FieldByName('NFECHAVE').AsString);
+
+      codTipoDoc   := StrToIntDef(Trim(dbfEnt.FieldByName('CODTDO').AsString), 0);
+      codComprador := StrToIntDef(Trim(dbfEnt.FieldByName('CODCOMP').AsString), 0);
+
+      total     := dbfEnt.FieldByName('TOTAL').AsFloat;
+      frete     := dbfEnt.FieldByName('FRETE').AsFloat;
+      desconto  := dbfEnt.FieldByName('DESCONTO').AsFloat;
+
+      dtEmis := dbfEnt.FieldByName('DATA_EMIS').AsDateTime;
+      if dtEmis = 0 then dtEmis := Date;
+
+      dtEnt  := dbfEnt.FieldByName('DATA_ENTRA').AsDateTime;
+      if dtEnt = 0 then dtEnt := dtEmis;
+
+      query.Close;
+      query.SQL.Text :=
+        'SELECT 1 FROM DOC_ENTRADA ' +
+        'WHERE CODLOJA=:L AND CODTERMINAL=:T AND CODTURNO=:U AND COO=:C';
+      query.ParamByName('L').AsInteger := codLoja;
+      query.ParamByName('T').AsInteger := codTer;
+      query.ParamByName('U').AsInteger := codTur;
+      query.ParamByName('C').AsInteger := coo;
+      query.Open;
+
+      if not query.IsEmpty then
+      begin
+        dbfEnt.Next;
+        Continue;
+      end;
+
+      if codTipoDoc = 0 then
+        codTipoDoc := 1;
+
+      query.Close;
+      query.SQL.Text :=
+        'SELECT 1 FROM TIPO_DOCUMENTO ' +
+        'WHERE CODLOJA = :L AND CODTIPODOC = :T';
+      query.ParamByName('L').AsInteger := codLoja;
+      query.ParamByName('T').AsInteger := codTipoDoc;
+      query.Open;
+
+      if query.IsEmpty then
+      begin
+        query.Close;
+        query.SQL.Text :=
+          'INSERT INTO TIPO_DOCUMENTO (CODLOJA, CODTIPODOC, DESCRICAO, DOCTYPE) ' +
+          'VALUES (:L, :T, :D, 1)';
+        query.ParamByName('L').AsInteger := codLoja;
+        query.ParamByName('T').AsInteger := codTipoDoc;
+        query.ParamByName('D').AsString  := 'TIPO ' + IntToStr(codTipoDoc);
+        query.ExecSQL;
+      end;
+
+      if codComprador = 0 then
+        codComprador := 1;
+
+      query.Close;
+      query.SQL.Text :=
+        'SELECT 1 FROM COMPRADOR WHERE CODCOMPRADOR = :C';
+      query.ParamByName('C').AsInteger := codComprador;
+      query.Open;
+
+      if query.IsEmpty then
+      begin
+        query.Close;
+        query.SQL.Text :=
+          'INSERT INTO COMPRADOR (CODCOMPRADOR, DESCRICAO, ATIVO) ' +
+          'VALUES (:C, :N, 0)';
+        query.ParamByName('C').AsInteger := codComprador;
+        query.ParamByName('N').AsString  := 'COMPRADOR ' + IntToStr(codComprador);
+        query.ExecSQL;
+      end;
+
+      query.Close;
+      query.SQL.Text :=
+        'SELECT 1 FROM DOCUMENTO ' +
+        'WHERE CODLOJA=:L AND CODTERMINAL=:T AND CODTURNO=:U AND COO=:C';
+      query.ParamByName('L').AsInteger := codLoja;
+      query.ParamByName('T').AsInteger := codTer;
+      query.ParamByName('U').AsInteger := codTur;
+      query.ParamByName('C').AsInteger := coo;
+      query.Open;
+
+      if query.IsEmpty then
+      begin
+        query.Close;
+        query.SQL.Text :=
+          'INSERT INTO DOCUMENTO (' +
+          'CODLOJA, CODTERMINAL, CODTURNO, COO, DENOMINACAO, ' +
+          'DATAHORA_INICIO, DATAHORA_FIM, ' +
+          'SUBTOTAL, DESCONTO_ACRESCIMO, TOTAL_PAGO, FRETE, ' +
+          'CODPLANOPAGTO, CANCELADO, ENTRADA_SAIDA' +
+          ') VALUES (' +
+          ':L, :T, :U, :C, ''EN'', ' +
+          ':D1, :D2, ' +
+          ':SUBT, :DESC, :TOT, :FRETE, ' +
+          '''1'', ''N'', ''E'')';
+
+        query.ParamByName('L').AsInteger := codLoja;
+        query.ParamByName('T').AsInteger := codTer;
+        query.ParamByName('U').AsInteger := codTur;
+        query.ParamByName('C').AsInteger := coo;
+        query.ParamByName('D1').AsDateTime := dtEmis;
+        query.ParamByName('D2').AsDateTime := dtEnt;
+
+        query.ParamByName('SUBT').AsFloat := total;
+        query.ParamByName('DESC').AsFloat := desconto;
+        query.ParamByName('TOT').AsFloat  := total;
+        query.ParamByName('FRETE').AsFloat := frete;
+
+        query.ExecSQL;
+      end;
+
+      query.Close;
+      query.SQL.Text :=
+        'INSERT INTO DOC_ENTRADA (' +
+        'CODLOJA, CODTERMINAL, CODTURNO, COO, ' +
+        'CODTIPODOC, CHAVE, NUMERO, SERIE, EMISSAO, ' +
+        'CODCOMPRADOR' +
+        ') VALUES (' +
+        ':L, :T, :U, :C, ' +
+        ':TDOC, :CH, :NUM, :SER, :EMI, ' +
+        ':COMP)';
+
+      query.ParamByName('L').AsInteger := codLoja;
+      query.ParamByName('T').AsInteger := codTer;
+      query.ParamByName('U').AsInteger := codTur;
+      query.ParamByName('C').AsInteger := coo;
+
+      query.ParamByName('TDOC').AsInteger := codTipoDoc;
+      query.ParamByName('CH').AsString    := chaveNFe;
+      query.ParamByName('NUM').AsInteger   := numero;
+      query.ParamByName('SER').AsInteger  := serie;
+      query.ParamByName('EMI').AsDateTime := dtEmis;
+      query.ParamByName('COMP').AsInteger := codComprador;
+
+      query.ExecSQL;
+
+      dbfEnt.Next;
+    end;
+
+    trans.Commit;
+    Writeln('Entradas importadas com sucesso.');
+  finally
+    dbfEnt.Free;
+  end;
+end;
+
+procedure ImportItensEntrada(
+  conn: TIBConnection;
+  trans: TSQLTransaction;
+  query: TSQLQuery;
+  systemPath: String
+);
+var
+  dbfIt: TDbf;
+
+  codDoc, seq, codProd: Integer;
+  qtd, preco, desc: Double;
+
+begin
+  dbfIt := TDbf.Create(nil);
+  try
+    dbfIt.FilePathFull := ExtractFilePath(systemPath + '/enitens.dbf');
+    dbfIt.TableName    := 'enitens.dbf';
+    dbfIt.Open;
+
+    dbfIt.First;
+    while not dbfIt.EOF do
+    begin
+
+      codDoc := StrToIntDef(Trim(dbfIt.FieldByName('NUMDOCTO').AsString), 0);
+      if codDoc = 0 then begin dbfIt.Next; Continue; end;
+
+      codProd := StrToIntDef(Trim(dbfIt.FieldByName('CODITE').AsString), 0);
+      if codProd = 0 then begin dbfIt.Next; Continue; end;
+
+      seq := dbfIt.RecNo;
+      if seq <= 0 then seq := 1;
+
+      qtd   := dbfIt.FieldByName('QTD').AsFloat;
+      preco := dbfIt.FieldByName('PRECOUNIT').AsFloat;
+      desc  := 0;
+
+      query.Close;
+      query.SQL.Text :=
+        'SELECT 1 FROM DOC_ENTRADA WHERE '+
+        'CODLOJA=1 AND CODTERMINAL=1 AND CODTURNO=1 AND COO=:C';
+      query.ParamByName('C').AsInteger := codDoc;
+      query.Open;
+
+      if query.IsEmpty then
+      begin
+        dbfIt.Next;
+        Continue;
+      end;
+
+      query.Close;
+      query.SQL.Text :=
+        'SELECT 1 FROM DOC_ITEM_ENTRADA WHERE '+
+        'CODLOJA=1 AND CODTERMINAL=1 AND CODTURNO=1 AND COO=:C AND SEQUENCIA=:S';
+
+      query.ParamByName('C').AsInteger := codDoc;
+      query.ParamByName('S').AsInteger := seq;
+      query.Open;
+
+      if not query.IsEmpty then
+      begin
+        dbfIt.Next;
+        Continue;
+      end;
+
+      query.Close;
+      query.SQL.Text :=
+        'INSERT INTO DOC_ITEM_ENTRADA ('+
+        'CODLOJA, CODTERMINAL, CODTURNO, COO, SEQUENCIA, '+
+        'CODIGO, QUANTIDADE, PRECO_ENTRADA, DESCONTO'+
+        ') VALUES (1, 1, 1, :C, :S, :P, :Q, :V, :D)';
+
+      query.ParamByName('C').AsInteger := codDoc;
+      query.ParamByName('S').AsInteger := seq;
+      query.ParamByName('P').AsInteger := codProd;
+      query.ParamByName('Q').AsFloat := qtd;
+      query.ParamByName('V').AsFloat := preco;
+      query.ParamByName('D').AsFloat := desc;
+
+      query.ExecSQL;
+
+      dbfIt.Next;
+    end;
+
+    trans.Commit;
+    Writeln('Itens de entrada importados com sucesso!');
+  finally
+    dbfIt.Free;
+  end;
+end;
+
+function ClienteExiste(conn: TIBConnection; codCli: Integer): Boolean;
+var q: TSQLQuery;
+begin
+  Result := False;
+  q := TSQLQuery.Create(nil);
+  try
+    q.DataBase := conn;
+    q.SQL.Text := 'SELECT 1 FROM CLIENTE WHERE CODCLIENTE = :C';
+    q.ParamByName('C').AsInteger := codCli;
+    q.Open;
+    Result := not q.IsEmpty;
+  finally
+    q.Free;
+  end;
+end;
+
+
+procedure ImportAccountsReceivable(
+  conn: TIBConnection;
+  trans: TSQLTransaction;
+  query: TSQLQuery;
+  systemPath: String
+);
+var
+  dbfCR: TDbf;
+
+  codFat, codCli, parcela: Integer;
+  dtInclude, dtVenc: TDateTime;
+  valorTotal, valorOrig, valorDup: Double;
+
+begin
+  dbfCR := TDbf.Create(nil);
+  try
+    dbfCR.FilePathFull := ExtractFilePath(systemPath + '/faturas.dbf');
+    dbfCR.TableName    := 'faturas.dbf';
+    dbfCR.Open;
+
+    dbfCR.First;
+    while not dbfCR.EOF do
+    begin
+      codFat := StrToIntDef(Trim(dbfCR.FieldByName('NUMFAT').AsString), 0);
+      if codFat = 0 then begin dbfCR.Next; Continue; end;
+
+      dtInclude := dbfCR.FieldByName('DATA_EMIS').AsDateTime;
+      valorTotal := dbfCR.FieldByName('TOTAL_DUP').AsFloat;
+      valorOrig  := dbfCR.FieldByName('TOTAL').AsFloat;
+
+      query.Close;
+      query.SQL.Text := 'SELECT 1 FROM FATURAS WHERE IDFATURA = :ID';
+      query.ParamByName('ID').AsInteger := codFat;
+      query.Open;
+
+      if not ClienteExiste(conn, codCli) then
+      begin
+        Writeln('Cliente ', codCli, ' não encontrado!');
+        dbfCR.Next;
+        Continue;
+      end;
+
+
+      if query.IsEmpty then
+      begin
+        query.Close;
+        query.SQL.Text :=
+          'INSERT INTO FATURAS ('+
+          'IDFATURA, R_P, DATA_INCLUSAO, VALOR, VALOR_ORIG,'+
+          'CODTERMINAL, CODLOJA, ALTERADO) '+
+          'VALUES (:ID, ''R'', :DT, :VAL, :ORIG, 1, 1, :ALT)';
+
+        query.ParamByName('ID').AsInteger := codFat;
+        query.ParamByName('DT').AsDateTime := dtInclude;
+        query.ParamByName('VAL').AsFloat := valorTotal;
+        query.ParamByName('ORIG').AsFloat := valorOrig;
+        query.ParamByName('ALT').AsDateTime := Now;
+        query.ExecSQL;
+      end;
+
+      dbfCR.Next;
+    end;
+
+  finally
+    dbfCR.Free;
+  end;
+
+  dbfCR := TDbf.Create(nil);
+  try
+    dbfCR.FilePathFull := ExtractFilePath(systemPath + '/dpsaida.dbf');
+    dbfCR.TableName    := 'dpsaida.dbf';
+    dbfCR.Open;
+
+    dbfCR.First;
+    while not dbfCR.EOF do
+    begin
+      codFat := StrToIntDef(Trim(dbfCR.FieldByName('NUMFAT').AsString), 0);
+      codCli := StrToIntDef(Trim(dbfCR.FieldByName('CODCLI').AsString), 0);
+
+      if not ClienteExiste(conn, codCli) then
+      begin
+        Writeln('Cliente ', codCli, ' não encontrado!');
+        dbfCR.Next;
+        Continue;
+      end;
+
+      if codFat = 0 then begin dbfCR.Next; Continue; end;
+
+      query.Close;
+      query.SQL.Text :=
+        'SELECT 1 FROM FATURAS_RECEBER WHERE IDFATURA = :ID';
+      query.ParamByName('ID').AsInteger := codFat;
+      query.Open;
+
+      if query.IsEmpty then
+      begin
+        query.Close;
+        query.SQL.Text :=
+          'INSERT INTO FATURAS_RECEBER ('+
+          'IDFATURA, CODCLIENTE, CODPLANOPAGTO, CODTERMINAL, CODLOJA, ALTERADO) '+
+          'VALUES (:ID, :CLI, ''AP'', 1, 1, :ALT)';
+
+        query.ParamByName('ID').AsInteger := codFat;
+        query.ParamByName('CLI').AsInteger := codCli;
+        query.ParamByName('ALT').AsDateTime := Now;
+        query.ExecSQL;
+      end;
+
+      dbfCR.Next;
+    end;
+
+  finally
+    dbfCR.Free;
+  end;
+
+  dbfCR := TDbf.Create(nil);
+  try
+    dbfCR.FilePathFull := ExtractFilePath(systemPath + '/dpsaida.dbf');
+    dbfCR.TableName    := 'dpsaida.dbf';
+    dbfCR.Open;
+
+    dbfCR.First;
+    while not dbfCR.EOF do
+    begin
+      codFat := StrToIntDef(Trim(dbfCR.FieldByName('NUMFAT').AsString), 0);
+      parcela := StrToIntDef(Trim(dbfCR.FieldByName('PARCELA').AsString), 1);
+      dtVenc  := dbfCR.FieldByName('DATA_VENC').AsDateTime;
+      valorDup := dbfCR.FieldByName('VALOR').AsFloat;
+
+      if codFat = 0 then begin dbfCR.Next; Continue; end;
+
+
+
+      query.Close;
+      query.SQL.Text :=
+        'SELECT 1 FROM FATURAS_PARCELAS WHERE IDFATURA=:F AND PARCELA=:P';
+      query.ParamByName('F').AsInteger := codFat;
+      query.ParamByName('P').AsInteger := parcela;
+      query.Open;
+
+      if query.IsEmpty then
+      begin
+        query.Close;
+        query.SQL.Text :=
+          'INSERT INTO FATURAS_PARCELAS ('+
+          'IDFATURA, PARCELA, VENCIMENTO, VALOR, CODCARTEIRA, CODTERMINAL, CODLOJA, ALTERADO) '+
+          'VALUES (:F, :P, :VENC, :VAL, ''CA'', 1, 1, :ALT)';
+
+        query.ParamByName('F').AsInteger := codFat;
+        query.ParamByName('P').AsInteger := parcela;
+        query.ParamByName('VENC').AsDateTime := dtVenc;
+        query.ParamByName('VAL').AsFloat := valorDup;
+        query.ParamByName('ALT').AsDateTime := Now;
+        query.ExecSQL;
+      end;
+
+      dbfCR.Next;
+    end;
+
+    trans.Commit;
+    Writeln('Contas a Receber importadas com sucesso!');
+
+  finally
+    dbfCR.Free;
+  end;
+
+end;
+
 var
   conn: TIBConnection;
   trans: TSQLTransaction;
@@ -2207,29 +2687,32 @@ begin
     writeln('Banco conectado.');
 
     // Basicos
-    //ImportGroups(conn, trans, query, systemPath);
-    //ImportBrands(conn, trans, query, systemPath);
-    //ImportSellers(conn, trans, query, systemPath);
-    //ImportWallets(conn, trans, query, systemPath);
-    //ImportTaxations(conn, trans, query, systemPath);
-    //ImportCarriers(conn, trans, query, systemPath);
-    //ImportPlanoPagto(conn, trans, query, systemPath);
+    ImportGroups(conn, trans, query, systemPath);
+    ImportBrands(conn, trans, query, systemPath);
+    ImportSellers(conn, trans, query, systemPath);
+    ImportWallets(conn, trans, query, systemPath);
+    ImportTaxations(conn, trans, query, systemPath);
+    ImportCarriers(conn, trans, query, systemPath);
+    ImportPlanoPagto(conn, trans, query, systemPath);
 
     // Cadastros
-    //ImportClients(conn, trans, query, systemPath);
-    //ImportActivities(conn, trans, query, systemPath);
-    //ImportSuppliers(conn, trans, query, systemPath);
-    //ImportGrades(conn, trans, query, systemPath);
-    //ImportProducts(conn, trans, query, systemPath);
+    ImportClients(conn, trans, query, systemPath);
+    ImportActivities(conn, trans, query, systemPath);
+    ImportSuppliers(conn, trans, query, systemPath);
+    ImportGrades(conn, trans, query, systemPath);
+    ImportProducts(conn, trans, query, systemPath);
 
     // Documentos
-    //ImportPreVenda(conn, trans, query, systemPath);
-    //ImportPreItem(conn, trans, query, systemPath);
-    //ImportTerminais(conn, trans, query, systemPath);
-    //ImportTurno(conn, trans, query, systemPath);
-    //ImportDocumento(conn, trans, query, systemPath);
-    //ImportDocItem(conn, trans, query, systemPath);
-    //ImportPagamentos(conn, trans, query, systemPath);
+    ImportPreVenda(conn, trans, query, systemPath);
+    ImportPreItem(conn, trans, query, systemPath);
+    ImportTerminais(conn, trans, query, systemPath);
+    ImportTurno(conn, trans, query, systemPath);
+    ImportDocumento(conn, trans, query, systemPath);
+    ImportDocItem(conn, trans, query, systemPath);
+    ImportPagamentos(conn, trans, query, systemPath);
+    ImportEntradas(conn, trans, query, systemPath);
+    ImportItensEntrada(conn, trans, query, systemPath);
+    ImportAccountsReceivable(conn, trans, query, systemPath);
 
 
 
